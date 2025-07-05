@@ -25,7 +25,7 @@ public class StyliApplication {
 			FormaPagamentoRepository formaPagamentoRepository,
 			OrdemDeServicoRepository ordemDeServicoRepository,
 			ItemRepository itemRepository,
-			AdicionalRepository adicionalRepository) {
+			AgendamentoRepository adicionalRepository) {
 
 		return args -> {
 
