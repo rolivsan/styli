@@ -1,11 +1,15 @@
 package br.com.styli.domain.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Entity
+@Data
+@Builder
 public class HorarioAtendimentoFuncionario {
 
     @Id
