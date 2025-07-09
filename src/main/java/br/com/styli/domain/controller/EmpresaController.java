@@ -1,18 +1,16 @@
 package br.com.styli.domain.controller;
 
-import br.com.styli.domain.model.Cliente;
-import br.com.styli.domain.model.Comentario;
 import br.com.styli.domain.model.Empresa;
-import br.com.styli.domain.service.ComentarioService;
 import br.com.styli.domain.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/empresa")
+@RequestMapping("styli/empresa")
 public class EmpresaController {
 
 

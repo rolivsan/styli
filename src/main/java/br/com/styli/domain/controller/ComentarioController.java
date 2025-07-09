@@ -1,11 +1,9 @@
 package br.com.styli.domain.controller;
 
 
-import br.com.styli.domain.model.Agendamento;
 import br.com.styli.domain.model.Comentario;
 import br.com.styli.domain.service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cliente/comentario")
+@RequestMapping("styli/cliente/comentario")
 public class ComentarioController {
 
     @Autowired

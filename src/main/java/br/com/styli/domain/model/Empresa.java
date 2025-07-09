@@ -26,10 +26,10 @@ public class Empresa {
     @ElementCollection
     private List<String> imagens; // URLs das imagens
 
+    private String instagram;
+
     private Double avaliacaoMedia = 0.0;
     private Integer quantidadeAvaliacoes = 0;
-
-    private String instagram;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Funcionario> funcionarios;

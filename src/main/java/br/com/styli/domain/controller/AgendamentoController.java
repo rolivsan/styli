@@ -1,7 +1,6 @@
 package br.com.styli.domain.controller;
 
 import br.com.styli.domain.model.Agendamento;
-import br.com.styli.domain.model.Cliente;
 import br.com.styli.domain.service.AgendamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cliente/agenda")
+@RequestMapping("styli/cliente/agenda")
 public class AgendamentoController {
 
     @Autowired
