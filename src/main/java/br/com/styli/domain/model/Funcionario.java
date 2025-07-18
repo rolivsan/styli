@@ -11,6 +11,9 @@ import java.util.List;
 @Builder
 public class Funcionario {
 
+    @ElementCollection
+    private List<String> imagens; // URLs das imagens
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

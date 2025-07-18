@@ -1,11 +1,11 @@
 package br.com.styli.domain.controller;
 
 import br.com.styli.domain.model.Empresa;
+import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,15 +23,22 @@ public class EmpresaController {
             return empresaList;
         }
 
-//        @GetMapping("{/empresa/id}")
-//        public ResponseEntity<Empresa> findByID(@PathVariable Long id){
-//            Cliente Empresa = empresaService.findById(id);
-//            return  ResponseEntity.status(200).body(Empresa);
-//        }
-//
-//        @PostMapping("{/create}")
-//        public ResponseEntity <Empresa> save(@RequestBody Empresa empresas){
-//            Empresa empresas = empresaService.save(empresas);
-//            return ResponseEntity.status(201).body(empresas);
-//        }
+        @GetMapping("/{id}")
+        public ResponseEntity<Empresa> findByID(@PathVariable Long id){
+            Empresa empresa = empresaService.findById(id);
+            return  ResponseEntity.status(200).body(empresa);
+        }
+
+        @PostMapping("/create")
+        public ResponseEntity <Empresa> save(@RequestBody Empresa empresas){
+            Empresa empresa = empresaService.save(empresas);
+            return ResponseEntity.status(201).body(empresas);
+        }
+
+        @PostMapping("/{id}/create-func")
+        public ResponseEntity <Empresa> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
+            Empresa empresa = empresaService.salvarFuncionario(empresaid,funcionario);
+            return ResponseEntity.status(201).body(funcionario);
+        }
+
 }
