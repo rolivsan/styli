@@ -28,11 +28,15 @@ public class EmpresaService {
         return empresa1;
     }
 
+    //TODO GUSTAVO - faltou setar os outros campos de usuario METOTO ERRADO
     public Empresa salvarFuncionario(Long empresaid, Funcionario funcionario){
         FuncionarioRequest funcionarioRequest = new FuncionarioRequest();
-        Funcionario funcionario = new Funcionario();
-        funcionario.setNomeUsuario(funcionarioRequest.getNomeusuario());
+        Funcionario funcionario = Funcionario.builder().nomeUsuario(funcionarioRequest.getNomeUsuario()).build();
         Empresa empresa1= empresaUseCase.save(empresaid, funcionario);
         return empresa1;
+    }
+
+    public List<Empresa> findAllByCategoria(Long categoriaId) {
+        return empresaUseCase.findAllByCategoria(categoriaId);
     }
 }

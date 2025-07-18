@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("styli/cliente/agenda")
+@RequestMapping("cliente/agenda")
 public class AgendamentoController {
 
     @Autowired

@@ -32,4 +32,8 @@ public class EmpresaUseCase {
         Empresa empresa1= empresaRepository.save(empresaid, funcionario);
         return empresa1;
     }
+
+    public List<Empresa> findAllByCategoria(Long categoriaId) {
+        return empresaRepository.findByCategorias_Id(categoriaId);
+    }
 }

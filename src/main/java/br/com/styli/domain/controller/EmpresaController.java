@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("styli/empresa")
+@RequestMapping("/empresa")
 public class EmpresaController {
 
 
@@ -38,7 +38,12 @@ public class EmpresaController {
         @PostMapping("/{id}/create-func")
         public ResponseEntity <Empresa> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
             Empresa empresa = empresaService.salvarFuncionario(empresaid,funcionario);
-            return ResponseEntity.status(201).body(funcionario);
+            return ResponseEntity.status(201).body(empresa);
+        }
+
+        public ResponseEntity<List<Empresa>> findAllByCategoria(@RequestParam(required = false) Long categoriaId){
+            List<Empresa> empresas = empresaService.findAllByCategoria(categoriaId);
+            return ResponseEntity.status(201).body(empresas);
         }
 
 }

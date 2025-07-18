@@ -1,7 +1,6 @@
 package br.com.styli.domain.controller;
 
 
-import br.com.styli.domain.model.Empresa;
 import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("styli/empresa/funcioario")
+@RequestMapping("empresa/funcioario")
 public class FuncionarioController {
 
     @Autowired
