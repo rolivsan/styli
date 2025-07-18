@@ -22,6 +22,7 @@ public class Empresa {
     private String endereco;
     private String horarioFuncionamento;
     private String logoUrl;
+    private Boolean destaque;
 
     @ElementCollection
     private List<String> imagens; // URLs das imagens
@@ -30,6 +31,14 @@ public class Empresa {
 
     private Double avaliacaoMedia = 0.0;
     private Integer quantidadeAvaliacoes = 0;
+
+    @ManyToMany
+    @JoinTable(
+            name = "empresa_categoria",
+            joinColumns = @JoinColumn(name = "empresa_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    private List<Categoria> categorias;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Funcionario> funcionarios;
