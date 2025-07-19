@@ -21,13 +21,13 @@ public class ClienteController {
         return ResponseEntity.status(200).body(clienteList);
     }
 
-    @GetMapping("{/id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Cliente> findByID(@PathVariable Long id){
         Cliente clientes = clienteService.findById(id);
         return  ResponseEntity.status(200).body(clientes);
     }
 
-    @PostMapping("{/create}")
+    @PostMapping
     public ResponseEntity <Cliente> save(@RequestBody Cliente cliente){
         Cliente clientes = clienteService.save(cliente);
         return ResponseEntity.status(201).body(clientes);
