@@ -29,6 +29,7 @@ public class EmpresaController {
             return ResponseEntity.status(200).body(empresaList);
         }
 
+
         @GetMapping("/{id}")
         public ResponseEntity<Empresa> findByID(@PathVariable Long id){
             Empresa empresa = empresaService.findById(id);
