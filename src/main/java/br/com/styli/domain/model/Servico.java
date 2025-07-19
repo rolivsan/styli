@@ -18,9 +18,8 @@ public class Servico {
     private String nome;
     private Integer duracaoMinutos;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
+    @ManyToMany(mappedBy = "servicos")
+    private List<Funcionario> funcionario;
 
     @OneToMany(mappedBy = "servico", cascade = CascadeType.ALL)
     private List<Agendamento> agendamentos;

@@ -27,7 +27,12 @@ public class Funcionario {
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
-    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "funcionario_servico",
+            joinColumns = @JoinColumn(name = "funcionario_id"),
+            inverseJoinColumns = @JoinColumn(name = "servico_id")
+    )
     private List<Servico> servicos;
 
     @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)

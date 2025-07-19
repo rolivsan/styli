@@ -1,12 +1,18 @@
 package br.com.styli.domain.controller;
 
+import br.com.styli.domain.dto.request.AgendamentoDinamicoRequest;
+import br.com.styli.domain.dto.request.ReservarHorarioRequest;
+import br.com.styli.domain.dto.response.AgendamentoResponse;
 import br.com.styli.domain.model.Empresa;
 import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -45,5 +51,41 @@ public class EmpresaController {
             List<Empresa> empresas = empresaService.findAllByCategoria(categoriaId);
             return ResponseEntity.status(201).body(empresas);
         }
+
+    @GetMapping("{idEmpresa}/funcionarios/{idFuncionario}/horarios-disponiveis")
+    public ResponseEntity<List<LocalTime>> buscarHorariosDisponiveis(
+            @PathVariable Long idEmpresa,
+            @PathVariable Long idFuncionario,
+            @RequestParam("data") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestParam("duracaoMinutos") int duracaoMinutos) {
+
+            List<LocalTime> horarios = empresaService.buscarHorariosDisponiveis(idEmpresa, idFuncionario,
+                    data,duracaoMinutos);
+
+        return ResponseEntity.ok(horarios);
+    }
+
+
+    @PostMapping("{idEmpresa}/funcionarios/{idFuncionario}/agendamentos")
+    public ResponseEntity<AgendamentoResponse> reservarHorario( @PathVariable Long idEmpresa,
+                                                                @PathVariable Long idFuncionario,
+                                                                @RequestBody ReservarHorarioRequest request){
+        AgendamentoResponse agendamentoResponse = empresaService.reservarHorario(idEmpresa, idFuncionario, request);
+
+        return ResponseEntity.ok(agendamentoResponse);
+    }
+
+    @PostMapping("/agendamentos/dinamico")
+    public ResponseEntity<AgendamentoResponse> agendarAleatoriamente(
+            @PathVariable Long idEmpresa,
+            @RequestBody AgendamentoDinamicoRequest request
+    ) {
+        AgendamentoResponse agendamentoResponse = empresaService.agendarAleatoriamente(idEmpresa, request);
+
+        return ResponseEntity.ok(agendamentoResponse);
+    }
+
+
+
 
 }
