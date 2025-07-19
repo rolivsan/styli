@@ -54,4 +54,8 @@ public class EmpresaService {
 
         return empresaUseCase.agendarAleatoriamente(idEmpresa, request);
     }
+
+    public List<Empresa>  findByDestaque() {
+        return empresaUseCase.findByDestaque();
+    }
 }

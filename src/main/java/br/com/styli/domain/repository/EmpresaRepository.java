@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     List<Empresa> findByCategorias_Id(Long categoriaId);
+
+    List<Empresa> findByDestaque(Boolean destaque);
 }

@@ -262,4 +262,15 @@ public class EmpresaUseCase {
         throw new BusinessException(ErrorCode.HORARIO_UNAVAILABLE);
     }
 
+    public List<Empresa>  findByDestaque() {
+        List<Empresa> empresasbyDestaque = null;
+
+        empresasbyDestaque = empresaRepository.findByDestaque(true);
+
+        if(empresasbyDestaque.isEmpty()){
+            log.info("nao encontrado empresas por destaque, buscando aleatoriamente");
+            empresasbyDestaque = empresaRepository.findAll();
+        }
+        return empresasbyDestaque;
+    }
 }
