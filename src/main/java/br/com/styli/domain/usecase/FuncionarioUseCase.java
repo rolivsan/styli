@@ -7,10 +7,6 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -150,13 +146,12 @@ public class FuncionarioUseCase {
     }
 
     public List<Funcionario> findAll(){
-        List<Funcionario> funcionarioList = funcionarioRepository.findAll();
-        return funcionarioList ;
+        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        return funcionarios ;
     }
 
-    @PostMapping("styli/empresa/id")
     public Funcionario save(Funcionario funcionario){
-        List<Funcionario> funcionario1 = funcionarioRepository.save(funcionario);
-        return funcionario1;
+        Funcionario funcionarioSaved = funcionarioRepository.save(funcionario);
+        return funcionarioSaved;
     }
 }

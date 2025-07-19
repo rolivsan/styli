@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("cliente/horario")
+@RequestMapping("/cliente/horario")
 public class HoratioAtendimentoFuncionarioController {
 
     @Autowired
