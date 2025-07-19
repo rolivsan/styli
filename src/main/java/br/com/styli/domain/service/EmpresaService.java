@@ -18,8 +18,14 @@ public class EmpresaService {
         List<Empresa> empresaList = empresaUseCase.findAll();
         return empresaList;
     }
+
     public Empresa findById(Long id){
         Empresa empresa = empresaUseCase.findById(id);
+        return empresa;
+    }
+
+    public Empresa findByDestaque(){
+        Empresa empresa = empresaUseCase.findByDestaque();
         return empresa;
     }
 
@@ -35,4 +41,5 @@ public class EmpresaService {
     public List<Empresa> findAllByCategoria(Long categoriaId) {
         return empresaUseCase.findAllByCategoria(categoriaId);
     }
+
 }

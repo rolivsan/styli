@@ -18,15 +18,21 @@ public class EmpresaController {
         EmpresaService empresaService;
 
         @GetMapping
-        public List<Empresa> findAll(){
+        public ResponseEntity<List<Empresa>> findAll(){
             List<Empresa> empresaList = empresaService.findAll();
-            return empresaList;
+            return ResponseEntity.status(200).body(empresaList);
         }
 
         @GetMapping("/{id}")
         public ResponseEntity<Empresa> findByID(@PathVariable Long id){
             Empresa empresa = empresaService.findById(id);
-            return  ResponseEntity.status(200).body(empresa);
+            return ResponseEntity.status(200).body(empresa);
+        }
+
+        @GetMapping("/home")
+        public ResponseEntity<Empresa> findByDestaque(){
+            Empresa empresa = empresaService.findByDestaque();
+            return ResponseEntity.status(200).body(empresa);
         }
 
         @PostMapping("/create")

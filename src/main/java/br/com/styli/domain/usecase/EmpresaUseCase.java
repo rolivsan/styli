@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -33,6 +34,11 @@ public class EmpresaUseCase {
             return new BusinessException(ErrorCode.EMPRESA_NOT_FOUND);
         });
         return empresa;
+    }
+
+    public Empresa findByDestaque(){
+        Optional <Empresa> empresa = empresaRepository.findByDestaque(true);
+        return empresa.get();
     }
 
     public Empresa save(Empresa empresa){
