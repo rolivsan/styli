@@ -18,46 +18,43 @@ import java.util.List;
 @RestController
 @RequestMapping("/empresa")
 public class EmpresaController {
+    @Autowired
+    EmpresaService empresaService;
 
+    @GetMapping
+    public ResponseEntity<List<Empresa>> findAll(){
+        List<Empresa> empresaList = empresaService.findAll();
+        return ResponseEntity.status(200).body(empresaList);
+    }
 
-        @Autowired
-        EmpresaService empresaService;
+    @GetMapping("/{id}")
+    public ResponseEntity<Empresa> findByID(@PathVariable Long id){
+        Empresa empresa = empresaService.findById(id);
+        return ResponseEntity.status(200).body(empresa);
+    }
 
-        @GetMapping
-        public ResponseEntity<List<Empresa>> findAll(){
-            List<Empresa> empresaList = empresaService.findAll();
-            return ResponseEntity.status(200).body(empresaList);
-        }
+    @GetMapping("/home")
+    public ResponseEntity<List<Empresa> > findByDestaque(){
+        List<Empresa>  empresas = empresaService.findByDestaque();
+        return ResponseEntity.status(200).body(empresas);
+    }
 
+    @PostMapping("/create")
+    public ResponseEntity <Empresa> save(@RequestBody Empresa empresas){
+        Empresa empresa = empresaService.save(empresas);
+        return ResponseEntity.status(201).body(empresas);
+    }
 
-        @GetMapping("/{id}")
-        public ResponseEntity<Empresa> findByID(@PathVariable Long id){
-            Empresa empresa = empresaService.findById(id);
-            return ResponseEntity.status(200).body(empresa);
-        }
+    @PostMapping("/{id}/create-func")
+    public ResponseEntity <Empresa> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
+        Empresa empresa = empresaService.salvarFuncionario(empresaid,funcionario);
+        return ResponseEntity.status(201).body(empresa);
+    }
 
-        @GetMapping("/home")
-        public ResponseEntity<List<Empresa> > findByDestaque(){
-            List<Empresa>  empresas = empresaService.findByDestaque();
-            return ResponseEntity.status(200).body(empresas);
-        }
-
-        @PostMapping("/create")
-        public ResponseEntity <Empresa> save(@RequestBody Empresa empresas){
-            Empresa empresa = empresaService.save(empresas);
-            return ResponseEntity.status(201).body(empresas);
-        }
-
-        @PostMapping("/{id}/create-func")
-        public ResponseEntity <Empresa> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
-            Empresa empresa = empresaService.salvarFuncionario(empresaid,funcionario);
-            return ResponseEntity.status(201).body(empresa);
-        }
-
-        public ResponseEntity<List<Empresa>> findAllByCategoria(@RequestParam(required = false) Long categoriaId){
-            List<Empresa> empresas = empresaService.findAllByCategoria(categoriaId);
-            return ResponseEntity.status(201).body(empresas);
-        }
+    public ResponseEntity<List<Empresa>> findAllByCategoria(@RequestParam(required = false) Long categoriaId){
+        List<Empresa> empresas = empresaService.findAllByCategoria(categoriaId);
+        return ResponseEntity.status(201).body(empresas);
+    }
 
     @GetMapping("{idEmpresa}/funcionarios/{idFuncionario}/horarios-disponiveis")
     public ResponseEntity<List<LocalTime>> buscarHorariosDisponiveis(
@@ -72,7 +69,6 @@ public class EmpresaController {
         return ResponseEntity.ok(horarios);
     }
 
-
     @PostMapping("{idEmpresa}/funcionarios/{idFuncionario}/agendamentos")
     public ResponseEntity<AgendamentoResponse> reservarHorario( @PathVariable Long idEmpresa,
                                                                 @PathVariable Long idFuncionario,
@@ -85,14 +81,10 @@ public class EmpresaController {
     @PostMapping("/agendamentos/dinamico")
     public ResponseEntity<AgendamentoResponse> agendarAleatoriamente(
             @PathVariable Long idEmpresa,
-            @RequestBody AgendamentoDinamicoRequest request
-    ) {
+            @RequestBody AgendamentoDinamicoRequest request) {
         AgendamentoResponse agendamentoResponse = empresaService.agendarAleatoriamente(idEmpresa, request);
 
         return ResponseEntity.ok(agendamentoResponse);
     }
-
-
-
 
 }

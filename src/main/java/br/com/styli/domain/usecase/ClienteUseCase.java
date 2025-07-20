@@ -34,6 +34,4 @@ public class ClienteUseCase {
         Cliente cliente = clienteRepository.save(clientes);
         return cliente;
     }
-
-
 }

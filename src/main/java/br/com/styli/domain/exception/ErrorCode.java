@@ -8,7 +8,6 @@ public enum ErrorCode {
     GENERIC("Erro genérico, contate o administrador"),
     HORARIO_UNAVAILABLE("Horario indisponivel, Nenhum funcionario disponível nesse horario");
 
-
     private final String message;
 
     ErrorCode(String message) {

@@ -33,5 +33,4 @@ public class ClienteController {
         return ResponseEntity.status(201).body(clientes);
     }
 
-    
 }

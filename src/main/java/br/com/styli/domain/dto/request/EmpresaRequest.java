@@ -3,7 +3,6 @@ package br.com.styli.domain.dto.request;
 import java.util.List;
 
 public class EmpresaRequest {
-
     private String nome;
     private String telefone;
     private String email;

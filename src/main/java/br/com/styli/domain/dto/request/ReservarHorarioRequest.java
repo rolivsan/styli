@@ -11,5 +11,4 @@ public class ReservarHorarioRequest {
     private Long idServico;
     private LocalDate data;
     private LocalTime horaInicio;
-
 }

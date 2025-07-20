@@ -27,7 +27,6 @@ public class FuncionarioUseCase {
     @Autowired
     ServicoRepository servicoRepository;
 
-
     public List<Funcionario> findAll(){
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         return funcionarios ;
