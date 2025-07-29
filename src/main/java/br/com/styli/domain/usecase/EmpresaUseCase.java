@@ -3,8 +3,10 @@ package br.com.styli.domain.usecase;
 import br.com.styli.domain.dto.request.AgendamentoDinamicoRequest;
 import br.com.styli.domain.dto.request.ReservarHorarioRequest;
 import br.com.styli.domain.dto.response.AgendamentoResponse;
+import br.com.styli.domain.dto.response.EmpresaResponse;
 import br.com.styli.domain.exception.BusinessException;
 import br.com.styli.domain.exception.ErrorCode;
+import br.com.styli.domain.mapper.EmpresaMapper;
 import br.com.styli.domain.model.*;
 import br.com.styli.domain.repository.*;
 import jakarta.transaction.Transactional;
@@ -41,42 +43,56 @@ public class EmpresaUseCase {
     @Autowired
     ServicoRepository servicoRepository;
 
-    public List<Empresa> findAll(){
-        List<Empresa> empresaList = empresaRepository.findAll();
-        return empresaList ;
+    public List<EmpresaResponse> findAll() {
+        List<EmpresaResponse> empresaResponseList = new ArrayList<>();
+
+        for (Empresa emp : empresaRepository.findAll()) {
+            empresaResponseList.add(EmpresaMapper.toResponse(emp));
+        }
+
+        return empresaResponseList;
     }
 
-    public Empresa findById(Long id){
+    public EmpresaResponse findById(Long id){
         Empresa empresa = empresaRepository.findById(id).orElseThrow(() -> {
             log.error("Empresa com ID {} não encontrado",id);
             return new BusinessException(ErrorCode.EMPRESA_NOT_FOUND);
         });
-        return empresa;
+        return EmpresaMapper.toResponse(empresa);
     }
 
-    public Empresa save(Empresa empresa){
+    public EmpresaResponse save(Empresa empresa){
         Empresa empresaSaved = empresaRepository.save(empresa);
-        return empresaSaved;
+        return EmpresaMapper.toResponse(empresaSaved);
     }
 
-    public Empresa salvarFuncioario(Long empresaid, Funcionario funcionario){
+    public EmpresaResponse salvarFuncioario(Long empresaid, Funcionario funcionario){
         Empresa empresa = empresaRepository
                 .findById(empresaid)
-                .orElseThrow(() -> {
-                    log.error("Empresa com ID {} não encontrado",empresaid);
-                    return new BusinessException(ErrorCode.EMPRESA_NOT_FOUND);
-                });
+                    .orElseThrow(() -> {
+                        log.error("Empresa com ID {} não encontrado",empresaid);
+                        return new BusinessException(ErrorCode.EMPRESA_NOT_FOUND);
+                    });
 
         funcionario.setEmpresa(empresa);
         funcionarioRepository.save(funcionario);
 
         empresa.getFuncionarios().add(funcionario);
 
-        return empresaRepository.save(empresa);
+        Empresa save = empresaRepository.save(empresa);
+
+        return EmpresaMapper.toResponse(save);
     }
 
-    public List<Empresa> findAllByCategoria(Long categoriaId) {
-        return empresaRepository.findByCategorias_Id(categoriaId);
+    public List<EmpresaResponse> findAllByCategoria(Long categoriaId) {
+        List<Empresa> empresasByCat = empresaRepository.findByCategorias_Id(categoriaId);
+
+        List<EmpresaResponse> empresaResponseList =  new ArrayList<>();
+        for (Empresa emp : empresasByCat) {
+            empresaResponseList.add(EmpresaMapper.toResponse(emp));
+        }
+
+        return empresaResponseList;
     }
 
     public List<LocalTime> buscarHorariosDisponiveis(Long idEmpresa, Long idFuncionario,
@@ -262,7 +278,7 @@ public class EmpresaUseCase {
         throw new BusinessException(ErrorCode.HORARIO_UNAVAILABLE);
     }
 
-    public List<Empresa>  findByDestaque() {
+    public List<EmpresaResponse>  findByDestaque() {
         List<Empresa> empresasbyDestaque = null;
 
         empresasbyDestaque = empresaRepository.findByDestaque(true);
@@ -271,6 +287,13 @@ public class EmpresaUseCase {
             log.info("nao encontrado empresas por destaque, buscando aleatoriamente");
             empresasbyDestaque = empresaRepository.findAll();
         }
-        return empresasbyDestaque;
+
+        List<EmpresaResponse> empresaResponseList =  new ArrayList<>();
+
+        for (Empresa emp : empresasbyDestaque) {
+            empresaResponseList.add(EmpresaMapper.toResponse(emp));
+        }
+
+        return empresaResponseList;
     }
 }

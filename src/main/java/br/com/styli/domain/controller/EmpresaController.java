@@ -3,6 +3,7 @@ package br.com.styli.domain.controller;
 import br.com.styli.domain.dto.request.AgendamentoDinamicoRequest;
 import br.com.styli.domain.dto.request.ReservarHorarioRequest;
 import br.com.styli.domain.dto.response.AgendamentoResponse;
+import br.com.styli.domain.dto.response.EmpresaResponse;
 import br.com.styli.domain.model.Empresa;
 import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.service.EmpresaService;
@@ -22,37 +23,37 @@ public class EmpresaController {
     EmpresaService empresaService;
 
     @GetMapping
-    public ResponseEntity<List<Empresa>> findAll(){
-        List<Empresa> empresaList = empresaService.findAll();
+    public ResponseEntity<List<EmpresaResponse>> findAll(){
+        List<EmpresaResponse> empresaList = empresaService.findAll();
         return ResponseEntity.status(200).body(empresaList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Empresa> findByID(@PathVariable Long id){
-        Empresa empresa = empresaService.findById(id);
+    public ResponseEntity<EmpresaResponse> findByID(@PathVariable Long id){
+        EmpresaResponse empresa = empresaService.findById(id);
         return ResponseEntity.status(200).body(empresa);
     }
 
     @GetMapping("/home")
-    public ResponseEntity<List<Empresa> > findByDestaque(){
-        List<Empresa>  empresas = empresaService.findByDestaque();
+    public ResponseEntity<List<EmpresaResponse> > findByDestaque(){
+        List<EmpresaResponse>  empresas = empresaService.findByDestaque();
         return ResponseEntity.status(200).body(empresas);
     }
 
     @PostMapping("/create")
-    public ResponseEntity <Empresa> save(@RequestBody Empresa empresas){
-        Empresa empresa = empresaService.save(empresas);
-        return ResponseEntity.status(201).body(empresas);
-    }
-
-    @PostMapping("/{id}/create-func")
-    public ResponseEntity <Empresa> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
-        Empresa empresa = empresaService.salvarFuncionario(empresaid,funcionario);
+    public ResponseEntity <EmpresaResponse> save(@RequestBody Empresa empresas){
+        EmpresaResponse empresa = empresaService.save(empresas);
         return ResponseEntity.status(201).body(empresa);
     }
 
-    public ResponseEntity<List<Empresa>> findAllByCategoria(@RequestParam(required = false) Long categoriaId){
-        List<Empresa> empresas = empresaService.findAllByCategoria(categoriaId);
+    @PostMapping("/{id}/create-func")
+    public ResponseEntity <EmpresaResponse> createFunc(@PathVariable Long empresaid, @RequestBody Funcionario funcionario){
+        EmpresaResponse empresa = empresaService.salvarFuncionario(empresaid,funcionario);
+        return ResponseEntity.status(201).body(empresa);
+    }
+
+    public ResponseEntity<List<EmpresaResponse>> findAllByCategoria(@RequestParam(required = false) Long categoriaId){
+        List<EmpresaResponse> empresas = empresaService.findAllByCategoria(categoriaId);
         return ResponseEntity.status(201).body(empresas);
     }
 
@@ -83,7 +84,6 @@ public class EmpresaController {
             @PathVariable Long idEmpresa,
             @RequestBody AgendamentoDinamicoRequest request) {
         AgendamentoResponse agendamentoResponse = empresaService.agendarAleatoriamente(idEmpresa, request);
-
         return ResponseEntity.ok(agendamentoResponse);
     }
 

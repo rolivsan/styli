@@ -3,6 +3,7 @@ package br.com.styli.domain.service;
 import br.com.styli.domain.dto.request.AgendamentoDinamicoRequest;
 import br.com.styli.domain.dto.request.ReservarHorarioRequest;
 import br.com.styli.domain.dto.response.AgendamentoResponse;
+import br.com.styli.domain.dto.response.EmpresaResponse;
 import br.com.styli.domain.model.Empresa;
 import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.usecase.EmpresaUseCase;
@@ -19,30 +20,26 @@ public class EmpresaService {
     @Autowired
     EmpresaUseCase empresaUseCase;
 
-    public List<Empresa> findAll(){
-        List<Empresa> empresaList = empresaUseCase.findAll();
-        return empresaList;
+    public List<EmpresaResponse> findAll(){
+     return empresaUseCase.findAll();
     }
-    public Empresa findById(Long id){
-        Empresa empresa = empresaUseCase.findById(id);
-        return empresa;
+    public EmpresaResponse findById(Long id){
+        return empresaUseCase.findById(id);
     }
 
-    public Empresa save(Empresa empresa){
-        Empresa empresa1= empresaUseCase.save(empresa);
-        return empresa1;
+    public EmpresaResponse save(Empresa empresa){
+        return empresaUseCase.save(empresa);
     }
 
-    public Empresa salvarFuncionario(Long empresaid, Funcionario funcionario){
+    public EmpresaResponse salvarFuncionario(Long empresaid, Funcionario funcionario){
         return empresaUseCase.salvarFuncioario(empresaid, funcionario);
     }
 
-    public List<Empresa> findAllByCategoria(Long categoriaId) {
+    public List<EmpresaResponse> findAllByCategoria(Long categoriaId) {
         return empresaUseCase.findAllByCategoria(categoriaId);
     }
 
-    public List<LocalTime> buscarHorariosDisponiveis(Long idEmpresa, Long idFuncionario,
-                                                     LocalDate data, int duracaoMinutos) {
+    public List<LocalTime> buscarHorariosDisponiveis(Long idEmpresa, Long idFuncionario, LocalDate data, int duracaoMinutos) {
         return empresaUseCase.buscarHorariosDisponiveis(idEmpresa, idFuncionario, data, duracaoMinutos);
     }
 
@@ -51,11 +48,10 @@ public class EmpresaService {
     }
 
     public AgendamentoResponse agendarAleatoriamente(Long idEmpresa, AgendamentoDinamicoRequest request) {
-
         return empresaUseCase.agendarAleatoriamente(idEmpresa, request);
     }
 
-    public List<Empresa>  findByDestaque() {
+    public List<EmpresaResponse>  findByDestaque() {
         return empresaUseCase.findByDestaque();
     }
 }
