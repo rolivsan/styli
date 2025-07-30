@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public class CategoriaResponse {
-    private long idCategoria;
-    private String categoriaNome;
+    private long id;
+    private String nome;
 }

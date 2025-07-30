@@ -1,5 +1,6 @@
 package br.com.styli.domain.mapper;
 
+import br.com.styli.domain.dto.response.AgendamentoClienteResponse;
 import br.com.styli.domain.dto.response.ClienteResponse;
 import br.com.styli.domain.model.Agendamento;
 import br.com.styli.domain.model.Cliente;
@@ -35,4 +36,33 @@ public class ClienteMapper {
                 .agendamentos(agendamentoListOut)
                 .build();
     }
+
+    public static AgendamentoClienteResponse toAgendamentoResponse(Agendamento agnd) {
+        AgendamentoClienteResponse.ServicoResponse servicoResponse = null;
+        if (agnd.getServico() != null) {
+            servicoResponse = AgendamentoClienteResponse.ServicoResponse.builder()
+                    .id(agnd.getServico().getId())
+                    .nome(agnd.getServico().getNome())
+                    .duracaoMinutos(agnd.getServico().getDuracaoMinutos())
+                    .preco(agnd.getServico().getPreco())
+                    .build();
+        }
+
+        AgendamentoClienteResponse.FuncionarioResponse funcionarioResponse = null;
+        if (agnd.getFuncionario() != null) {
+            funcionarioResponse = AgendamentoClienteResponse.FuncionarioResponse.builder()
+                    .id(agnd.getFuncionario().getId())
+                    .nomeCompleto(agnd.getFuncionario().getNomeCompleto())
+                    .imagens(agnd.getFuncionario().getImagens())
+                    .build();
+        }
+
+        return AgendamentoClienteResponse.builder()
+                .idAgendamento(agnd.getId())
+                .horario(agnd.getHorario())
+                .servico(servicoResponse)
+                .funcionario(funcionarioResponse)
+                .build();
+    }
+
 }

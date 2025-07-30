@@ -1,5 +1,6 @@
 package br.com.styli.domain.service;
 
+import br.com.styli.domain.dto.response.FuncionarioResponse;
 import br.com.styli.domain.model.Funcionario;
 import br.com.styli.domain.usecase.FuncionarioUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,13 @@ public class FuncionarioService {
     @Autowired
     FuncionarioUseCase funcionarioUseCase;
 
-    public List<Funcionario> findAll(){
-        List<Funcionario> funcionarioList = funcionarioUseCase.findAll();
+    public List<FuncionarioResponse> findAll(Long idEmpresa){
+        List<FuncionarioResponse> funcionarioList = funcionarioUseCase.findAll(idEmpresa);
         return funcionarioList;
     }
 
-    public Funcionario save(Funcionario funcionario){
-        Funcionario funcionario1 = funcionarioUseCase.save(funcionario);
+    public FuncionarioResponse create(Funcionario funcionario){
+        FuncionarioResponse funcionario1 = funcionarioUseCase.save(funcionario);
         return funcionario1;
     }
 }

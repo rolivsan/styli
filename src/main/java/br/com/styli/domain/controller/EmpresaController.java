@@ -3,10 +3,14 @@ package br.com.styli.domain.controller;
 import br.com.styli.domain.dto.request.AgendamentoDinamicoRequest;
 import br.com.styli.domain.dto.request.ReservarHorarioRequest;
 import br.com.styli.domain.dto.response.AgendamentoResponse;
+import br.com.styli.domain.dto.response.ComentarioResponse;
 import br.com.styli.domain.dto.response.EmpresaResponse;
+import br.com.styli.domain.dto.response.FuncionarioResponse;
 import br.com.styli.domain.model.Empresa;
 import br.com.styli.domain.model.Funcionario;
+import br.com.styli.domain.service.ComentarioService;
 import br.com.styli.domain.service.EmpresaService;
+import br.com.styli.domain.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,12 @@ import java.util.List;
 public class EmpresaController {
     @Autowired
     EmpresaService empresaService;
+
+    @Autowired
+    FuncionarioService funcionarioService;
+
+    @Autowired
+    ComentarioService comentarioService;
 
     @GetMapping
     public ResponseEntity<List<EmpresaResponse>> findAll(){
@@ -79,12 +89,28 @@ public class EmpresaController {
         return ResponseEntity.ok(agendamentoResponse);
     }
 
-    @PostMapping("/agendamentos/dinamico")
+    @PostMapping("{idEmpresa}/agendamentos/dinamico")
     public ResponseEntity<AgendamentoResponse> agendarAleatoriamente(
             @PathVariable Long idEmpresa,
             @RequestBody AgendamentoDinamicoRequest request) {
         AgendamentoResponse agendamentoResponse = empresaService.agendarAleatoriamente(idEmpresa, request);
         return ResponseEntity.ok(agendamentoResponse);
+    }
+
+    @GetMapping("{idEmpresa}/comentarios")
+    public List<ComentarioResponse> findAllComentarios( @PathVariable Long idEmpresa){
+        List<ComentarioResponse> comentarioListList = comentarioService.findAll(idEmpresa);
+        return comentarioListList;
+    }
+
+    @GetMapping("funcionarios/{idEmpresa}")
+    public List<FuncionarioResponse> findAllFuncionarios(@PathVariable Long idEmpresa){
+        return funcionarioService.findAll(idEmpresa);
+    }
+
+    @PostMapping ("/funcionario/create")
+    public ResponseEntity<FuncionarioResponse> createFuncionario(@RequestBody Funcionario funcionario){
+        return ResponseEntity.status(201).body(funcionarioService.create(funcionario));
     }
 
 }

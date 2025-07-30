@@ -1,5 +1,7 @@
 package br.com.styli.domain.service;
 
+import br.com.styli.domain.dto.response.AgendamentoClienteResponse;
+import br.com.styli.domain.dto.response.ClienteResponse;
 import br.com.styli.domain.model.Cliente;
 import br.com.styli.domain.usecase.ClienteUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +15,22 @@ public class ClienteService {
     @Autowired
     ClienteUseCase clienteUseCase;
 
-    public List<Cliente> findAll(){
-        List<Cliente> clienteList = clienteUseCase.findAll();
+    public List<ClienteResponse> findAll(){
+        List<ClienteResponse> clienteList = clienteUseCase.findAll();
         return clienteList;
     }
 
-    public Cliente findById(Long id){
-        Cliente clientes = clienteUseCase.findById(id);
+    public ClienteResponse findById(Long id){
+        ClienteResponse clientes = clienteUseCase.findById(id);
         return clientes;
     }
 
-    public Cliente save(Cliente clientes){
-        Cliente clientes1 = clienteUseCase.save(clientes);
+    public ClienteResponse save(Cliente clientes){
+        ClienteResponse clientes1 = clienteUseCase.save(clientes);
         return clientes1;
     }
 
+    public List<AgendamentoClienteResponse> findAllHorarios(Long id) {
+        return clienteUseCase.findAllHorarios(id);
+    }
 }

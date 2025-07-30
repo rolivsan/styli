@@ -7,8 +7,8 @@ public class CategoriaMapper {
 
     public static CategoriaResponse toResponse (Categoria categoria){
         return CategoriaResponse.builder()
-                .idCategoria(categoria.getId())
-                .categoriaNome(categoria.getNome())
+                .id(categoria.getId())
+                .nome(categoria.getNome())
                 .build();
     }
 }
