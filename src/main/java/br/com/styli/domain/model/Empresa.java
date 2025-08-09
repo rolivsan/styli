@@ -1,18 +1,14 @@
 package br.com.styli.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Empresa {
 
     @Id
@@ -22,19 +18,21 @@ public class Empresa {
     private String nome;
     private String telefone;
     private String email;
-    private String senha;
     private String endereco;
+    private String cidade;
+    private String uf;
+    private Double latitude;
+    private Double longitude;
+
+    // Horário de funcionamento (ex: 09:00 - 18:00)
     private String horarioFuncionamento;
-    private String logoUrl;
+
+    // Se esta empresa aparece em destaque
     private Boolean destaque;
 
+    // Imagens da empresa
     @ElementCollection
-    private List<String> imagens; // URLs das imagens
-
-    private String instagram;
-
-    private Double avaliacaoMedia = 0.0;
-    private Integer quantidadeAvaliacoes = 0;
+    private List<String> imagens;
 
     @ManyToMany
     @JoinTable(
@@ -45,12 +43,5 @@ public class Empresa {
     private List<Categoria> categorias;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Funcionario> funcionarios;
-
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Cliente> clientes;
-
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Comentario> comentarios;
+    private List<EmpresaServico> servicos;
 }
-

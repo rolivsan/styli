@@ -2,7 +2,6 @@ package br.com.styli.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
@@ -17,6 +16,7 @@ public class Categoria {
 
     private String nome;
 
+    // Empresas que oferecem esta categoria
     @ManyToMany(mappedBy = "categorias")
     private List<Empresa> empresas;
 }
