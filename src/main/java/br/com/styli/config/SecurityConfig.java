@@ -43,7 +43,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .headers(h -> h.frameOptions(f -> f.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**", "/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/auth/**",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()   // << libera cadastro
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()

@@ -34,6 +34,11 @@ public class Agendamento {
     private LocalDateTime inicio;
     private LocalDateTime fim;
 
+    private String observacoes;
+
+    private String motivoCancelamento;
+    private LocalDateTime canceladoEm;
+
     @Enumerated(EnumType.STRING)
     private StatusAgendamento status;
 }
