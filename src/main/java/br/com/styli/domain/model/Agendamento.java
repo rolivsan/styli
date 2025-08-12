@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Agendamento {
 
+    @Version
+    private Long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

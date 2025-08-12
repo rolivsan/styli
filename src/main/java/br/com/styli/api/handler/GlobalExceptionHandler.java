@@ -47,6 +47,31 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno. Tente novamente.");
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
+        var body = new java.util.HashMap<String, Object>();
+        body.put("timestamp", java.time.LocalDateTime.now().toString());
+        body.put("status", 422);
+        body.put("error", "Validation error");
+
+        var fields = new java.util.HashMap<String, String>();
+        ex.getConstraintViolations().forEach(v -> fields.put(v.getPropertyPath().toString(), v.getMessage()));
+        body.put("fields", fields);
+        return ResponseEntity.unprocessableEntity().body(body);
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        var body = new java.util.HashMap<String, Object>();
+        body.put("timestamp", java.time.LocalDateTime.now().toString());
+        body.put("status", 403);
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(403).body(body);
+    }
+
+
+
     private ResponseEntity<?> build(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now().toString());
