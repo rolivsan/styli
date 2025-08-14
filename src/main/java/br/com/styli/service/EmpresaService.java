@@ -1,5 +1,6 @@
 package br.com.styli.service;
 
+import br.com.styli.dto.request.BuscarEmpresasRequest;
 import br.com.styli.dto.request.CriarEmpresaRequest;
 import br.com.styli.dto.request.CriarEmpresaServicoRequest;
 import br.com.styli.dto.request.VincularFuncionarioRequest;
@@ -22,6 +23,7 @@ public class EmpresaService {
     private final VincularFuncionarioEmpresaUseCase vincularFuncionarioEmpresaUseCase;
     private final ListarServicosDaEmpresaUseCase listarServicosDaEmpresaUseCase;
     private final ListarServicosComFuncionariosUseCase listarServicosComFuncionariosUseCase;
+    private final BuscarEmpresasUseCase buscarEmpresasUseCase;
 
     public EmpresaDetalheResponse buscarPorId(Long id) {
         // 1) Busca informações básicas da empresa
@@ -53,5 +55,9 @@ public class EmpresaService {
 
     public List<EmpresaDetalheResponse.ServicoResumo> listarServicos(Long empresaId) {
         return listarServicosDaEmpresaUseCase.executar(empresaId);
+    }
+
+    public List<EmpresaResponse> buscarEmpresas(BuscarEmpresasRequest request) {
+        return buscarEmpresasUseCase.executar(request);
     }
 }

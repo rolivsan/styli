@@ -1,12 +1,22 @@
 package br.com.styli.dto.request;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
 public class CriarAgendamentoRequest {
-    private Long servicoId;        // << só o serviço (EmpresaServico)
+
+    @NotNull(message = "servicoId é obrigatório")
+    private Long servicoId;
+
+    @NotNull(message = "clienteId é obrigatório")
     private Long clienteId;
-    private Long funcionarioId;    // opcional (se não vier, escolhe aleatório habilitado)
-    private LocalDateTime inicio;  // data/hora desejada
+
+    // opcional: quando cliente escolhe pro
+    private Long funcionarioId;
+
+    @NotNull(message = "início é obrigatório")
+    @Future(message = "início deve ser no futuro")
+    private LocalDateTime inicio;
 }

@@ -4,52 +4,90 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.lang.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
+import java.util.List;
 
 @Component
-public class JwtAuthFilter extends org.springframework.web.filter.OncePerRequestFilter {
+@RequiredArgsConstructor
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
-    public JwtAuthFilter(JwtService jwtService, UserDetailsService uds) {
-        this.jwtService = jwtService;
-        this.userDetailsService = uds;
+    /**
+     * Informe aqui todos os caminhos que não devem passar pelo filtro JWT.
+     * Incluí tanto os defaults (/v3/api-docs, /swagger-ui) quanto os customizados (/api-docs, /swagger-ui.html).
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String uri = request.getRequestURI();
+
+        // Preflight CORS
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
+        // Swagger/OpenAPI - defaults
+        if (uri.startsWith("/v3/api-docs") || uri.startsWith("/swagger-ui")) {
+            return true;
+        }
+
+        // Swagger/OpenAPI - caso tenha customizado para /api-docs e /swagger-ui.html
+        if (uri.startsWith("/api-docs") || "/swagger-ui.html".equals(uri)) {
+            return true;
+        }
+
+        // H2 Console (se quiser pular no filtro também)
+        if (uri.startsWith("/h2-console")) {
+            return true;
+        }
+
+        // Endpoints públicos de auth
+        if (uri.startsWith("/auth/")) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        String token = authHeader.substring(7);
-        String username;
-        try {
-            username = jwtService.extractUsername(token);
-        } catch (Exception e) {
-            filterChain.doFilter(request, response);
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
+
+        String auth = request.getHeader("Authorization");
+        if (auth == null || !auth.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
             return;
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails user = userDetailsService.loadUserByUsername(username);
-            if (jwtService.isValid(token, user)) {
-                var authToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        String token = auth.substring(7);
+
+        try {
+            String username = jwtService.extractUsername(token);
+            if (username != null && !jwtService.isExpired(token)) {
+                // Lê roles do claim "roles"
+                var roles = jwtService.getRoles(token);
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+                var authentication =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (Exception e) {
+            // Token inválido → não autentica; request seguirá e Security decidirá (401/403)
+            SecurityContextHolder.clearContext();
         }
-        filterChain.doFilter(request, response);
+
+        chain.doFilter(request, response);
     }
 }

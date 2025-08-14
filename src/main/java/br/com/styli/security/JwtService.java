@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Instant;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
 
-    // Gere algo forte e guarde fora do git em prod; aqui é simples p/ dev
+    // Em produção: use um segredo forte fora do código e do git
     private static final String SECRET = "b2a9e2d1c0b9a8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a19080706050403021";
 
     // 30 minutos
@@ -25,22 +24,50 @@ public class JwtService {
     private static final long REFRESH_EXP_SECONDS = 7 * 24 * 60 * 60;
 
     private Key getKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(java.util.Base64.getEncoder().encodeToString(SECRET.getBytes())));
+        // mantém compatível com seu código atual
+        return Keys.hmacShaKeyFor(
+                Decoders.BASE64.decode(Base64.getEncoder().encodeToString(SECRET.getBytes()))
+        );
     }
 
+    // ========= GERAR TOKENS =========
+
+    /**
+     * Gera access token SEM claims extras (apenas roles padrão).
+     */
     public String generateAccessToken(UserDetails user) {
+        return generateAccessToken(user, Map.of());
+    }
+
+    /**
+     * Gera access token COM claims extras (ex.: clienteId, funcionarioId).
+     */
+    public String generateAccessToken(UserDetails user, Map<String, Object> extraClaims) {
         Instant now = Instant.now();
+
+        // Roles em formato "ROLE_X,ROLE_Y"
         String roles = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
+        if (extraClaims != null && !extraClaims.isEmpty()) {
+            claims.putAll(extraClaims);
+        }
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .addClaims(Map.of("roles", roles))
+                .addClaims(claims)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusSeconds(ACCESS_EXP_SECONDS)))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    /**
+     * Gera refresh token (sem claims customizadas).
+     */
     public String generateRefreshToken(UserDetails user) {
         Instant now = Instant.now();
         return Jwts.builder()
@@ -50,6 +77,8 @@ public class JwtService {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    // ========= LEITURA/VALIDAÇÃO =========
 
     public String extractUsername(String token) {
         return parse(token).getBody().getSubject();
@@ -74,5 +103,48 @@ public class JwtService {
 
     private Jws<Claims> parse(String token) {
         return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
+    }
+
+    // ========= GETTERS DE CLAIMS CUSTOMIZADAS =========
+
+    public Optional<Long> getClienteId(String token) {
+        try {
+            Object v = parse(token).getBody().get("clienteId");
+            if (v == null) return Optional.empty();
+            if (v instanceof Integer i) return Optional.of(i.longValue());
+            if (v instanceof Long l) return Optional.of(l);
+            if (v instanceof String s) return Optional.of(Long.parseLong(s));
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Long> getFuncionarioId(String token) {
+        try {
+            Object v = parse(token).getBody().get("funcionarioId");
+            if (v == null) return Optional.empty();
+            if (v instanceof Integer i) return Optional.of(i.longValue());
+            if (v instanceof Long l) return Optional.of(l);
+            if (v instanceof String s) return Optional.of(Long.parseLong(s));
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Retorna roles do token como conjunto (ex.: ["ROLE_CLIENTE","ROLE_ADMIN"])
+     */
+    public Set<String> getRoles(String token) {
+        try {
+            Object v = parse(token).getBody().get("roles");
+            if (v == null) return Set.of();
+            String s = String.valueOf(v);
+            if (s.isBlank()) return Set.of();
+            return new HashSet<>(Arrays.asList(s.split(",")));
+        } catch (Exception e) {
+            return Set.of();
+        }
     }
 }
