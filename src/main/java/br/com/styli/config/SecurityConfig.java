@@ -33,7 +33,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml").permitAll()
                         // se quiser liberar cadastro de cliente sem login:
                         .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
                         .requestMatchers("/api/**").authenticated()
@@ -65,4 +70,5 @@ public class SecurityConfig {
         builder.userDetailsService(uds).passwordEncoder(encoder);
         return builder.build();
     }
+
 }

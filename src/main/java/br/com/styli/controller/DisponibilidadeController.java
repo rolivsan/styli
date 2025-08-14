@@ -2,6 +2,7 @@ package br.com.styli.controller;
 
 import br.com.styli.dto.response.DisponibilidadeDiaResponse;
 import br.com.styli.service.DisponibilidadeService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ public class DisponibilidadeController {
 
     private final DisponibilidadeService disponibilidadeService;
 
-    // GET /api/empresas/{id}/disponibilidade?servicoId=...&data=YYYY-MM-DD&funcionarioId=opcional
+    @Operation(summary = "Consultar disponibilidade", description = "Lista horários disponíveis de uma empresa para um serviço em uma data.")
     @GetMapping("/{empresaId}/disponibilidade")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE','FUNCIONARIO')")
     public DisponibilidadeDiaResponse listar(

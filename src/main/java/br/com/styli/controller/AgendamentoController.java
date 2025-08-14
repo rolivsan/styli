@@ -8,6 +8,7 @@ import br.com.styli.security.AuthorizationService;
 import br.com.styli.security.JwtService;
 import br.com.styli.service.AgendamentoService;
 import br.com.styli.usecase.CriarAgendamentoUseCase;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,10 @@ public class AgendamentoController {
     private final CriarAgendamentoUseCase criarAgendamentoUseCase;
     private final JwtService jwtService;
 
-    // --- CRIAR ---
+    @Operation(summary = "Criar agendamento", description = "Cria um novo agendamento para um cliente em um serviço de uma empresa.")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE','FUNCIONARIO')")
     public AgendamentoResponse criar(@RequestBody @Valid CriarAgendamentoRequest req, HttpServletRequest http) {
-        // Regra opcional: CLIENTE só cria para ele mesmo
         boolean isCliente = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .stream().anyMatch(a -> a.getAuthority().equals("ROLE_CLIENTE"));
         if (isCliente) {
@@ -48,7 +48,7 @@ public class AgendamentoController {
         return criarAgendamentoUseCase.executar(req);
     }
 
-    // --- CANCELAR ---
+    @Operation(summary = "Cancelar agendamento", description = "Cancela um agendamento existente.")
     @PatchMapping("/{id}/cancelar")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE','FUNCIONARIO')")
     public AgendamentoResponse cancelar(@PathVariable Long id,
@@ -58,7 +58,7 @@ public class AgendamentoController {
         return service.cancelar(id, req);
     }
 
-    // --- LISTAR (APENAS ESTE, sem sobrecarga!) ---
+    @Operation(summary = "Listar agendamentos", description = "Lista agendamentos com filtros opcionais por cliente, funcionário, empresa, data e status.")
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE','FUNCIONARIO')")
     public List<AgendamentoResponse> listar(
@@ -78,7 +78,6 @@ public class AgendamentoController {
         f.setAte(ate);
         f.setStatus(status);
 
-        // aplica limitação por papel usando claims do JWT
         authz.applyFilterByRole(f, http);
 
         return service.listar(f);
